@@ -3,9 +3,9 @@
   "host": "localhost",
   "username": "nodejs",
   "password": "root",
-  "database": "NodeJsTest",
+  "database": "nestjs-discovery",
   "schema": "dbo",
   "entities": ["dist/**/*.entity.js"],
   "options": { "trustServerCertificate": true },
-  "synchronyze": true
+  "synchronize": true
 }
