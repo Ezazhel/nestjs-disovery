@@ -1,0 +1,11 @@
+{
+  "type": "mssql",
+  "host": "localhost",
+  "username": "nodejs",
+  "password": "root",
+  "database": "NodeJsTest",
+  "schema": "dbo",
+  "entities": ["dist/**/*.entity.js"],
+  "options": { "trustServerCertificate": true },
+  "synchronyze": true
+}
