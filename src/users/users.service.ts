@@ -1,11 +1,10 @@
-import { Injectable, UseFilters } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsSelect, Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './entities/user.entity';
-import { Event, EventID } from '../events/entities/event.entity';
-import { nextTick } from 'process';
-import { debug } from 'console';
+import { Event } from '../events/entities/event.entity';
+
 @Injectable()
 export class UsersService {
   constructor(
@@ -33,28 +32,13 @@ export class UsersService {
         id: id,
       },
     });
-    const events = await this.eventRepository.find({
-      select: ['id', 'enabled', 'created'],
-      where: {
-        user: user,
-      },
+    const events = await this.getUserEvents(id, {
+      id: true,
+      enabled: true,
+      created: true,
     });
 
-    const eventsFiltered: { [id: string]: Event } = {
-      [events[0].id]: events[0],
-    };
-
-    events.forEach((event) => {
-      if (!eventsFiltered[event.id]) eventsFiltered[event.id] = event;
-
-      if (eventsFiltered[event.id].created < event.created)
-        eventsFiltered[event.id] = event;
-    });
-
-    user.consents = Object.values(eventsFiltered).map((event) => {
-      delete event.created;
-      return event;
-    });
+    user.consents = this.getDistinctLastUpdatedEventsWithoutCreated(events);
     return user;
   }
 
@@ -66,7 +50,10 @@ export class UsersService {
     await this.userRepository.delete(id);
   }
 
-  async getUserEvents(id: string, select: FindOptionsSelect<Event>) {
+  async getUserEvents(
+    id: string,
+    select: FindOptionsSelect<Event>,
+  ): Promise<Event[]> {
     return await this.eventRepository.find({
       select,
       where: {
@@ -74,6 +61,24 @@ export class UsersService {
           id: id,
         },
       },
+    });
+  }
+
+  getDistinctLastUpdatedEventsWithoutCreated(events: Event[]) {
+    const eventsFiltered: { [id: string]: Event } = {
+      [events[0].id]: events[0],
+    };
+
+    events.forEach((event) => {
+      if (!eventsFiltered[event.id]) eventsFiltered[event.id] = event;
+
+      if (eventsFiltered[event.id].created < event.created)
+        eventsFiltered[event.id] = event;
+    });
+
+    return Object.values(eventsFiltered).map((event) => {
+      delete event.created;
+      return event;
     });
   }
 }
