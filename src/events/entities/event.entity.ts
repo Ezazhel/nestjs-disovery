@@ -4,7 +4,6 @@ import {
   Entity,
   ManyToOne,
   PrimaryGeneratedColumn,
-  UpdateDateColumn,
 } from 'typeorm';
 import { User } from 'users/entities/user.entity';
 
@@ -17,7 +16,7 @@ export class Event {
   @Column()
   id: string;
 
-  @ManyToOne((type) => User, (user) => user.consents)
+  @ManyToOne(() => User, (user) => user.consents)
   user: User;
 
   @Column()
@@ -25,7 +24,4 @@ export class Event {
 
   @CreateDateColumn()
   created: Date;
-
-  @UpdateDateColumn()
-  updated: Date;
 }

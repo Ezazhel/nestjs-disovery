@@ -1,5 +1,4 @@
 import {
-  BeforeUpdate,
   Column,
   CreateDateColumn,
   Entity,
@@ -14,10 +13,14 @@ export class User {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @Column({
+    unique: true,
+  })
   email: string;
 
-  @OneToMany((type) => Event, (event) => event.user)
+  @OneToMany(() => Event, (event) => event.user, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn()
   consents: Event[];
 

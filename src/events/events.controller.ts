@@ -1,4 +1,10 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  HttpException,
+  HttpStatus,
+} from '@nestjs/common';
 import { EventsService } from './events.service';
 import { CreateEventDto } from './dto/create-event.dto';
 
@@ -8,6 +14,18 @@ export class EventsController {
 
   @Post()
   create(@Body() createEventDto: CreateEventDto) {
+    if (
+      createEventDto.consents.some(
+        (consent) =>
+          consent.id != 'sms_notifications' &&
+          consent.id != 'email_notifications',
+      )
+    )
+      throw new HttpException(
+        "One of your consent isn't in the list",
+        HttpStatus.BAD_REQUEST,
+      );
+
     return this.eventsService.create(createEventDto);
   }
 }
