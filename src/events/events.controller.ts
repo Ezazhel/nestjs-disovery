@@ -7,12 +7,20 @@ import {
 } from '@nestjs/common';
 import { EventsService } from './events.service';
 import { CreateEventDto } from './dto/create-event.dto';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Events')
 @Controller('events')
 export class EventsController {
   constructor(private readonly eventsService: EventsService) {}
 
   @Post()
+  @ApiOperation({ summary: 'Create a consent event' })
+  @ApiResponse({ status: 201, description: 'Created' })
+  @ApiResponse({
+    status: 400,
+    description: "One of your consent isn't in the list",
+  })
   create(@Body() createEventDto: CreateEventDto) {
     if (
       createEventDto.consents.some(

@@ -67,6 +67,7 @@ describe('EventsService', () => {
       expect(service.create(consent)).resolves.toEqual(consentSMS);
     });
   });
+
   describe('create fail()', () => {
     it('shouldnt insert an event', () => {
       const consent: CreateEventDto = {
