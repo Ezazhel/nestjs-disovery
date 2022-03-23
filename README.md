@@ -74,4 +74,3 @@ Nest is [MIT licensed](LICENSE).
 =======
 # nestjs-disovery
 Learning project using nestjs ; jest ; typeorm ; mssql
->>>>>>> e8e21c2c2bc261452cbc31ac2183469357f76200
