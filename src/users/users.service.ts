@@ -25,7 +25,7 @@ export class UsersService {
     return this.userRepository.find();
   }
 
-  async findOne(id: string) {
+  async findOne(id: string): Promise<Event> {
     const user = await this.userRepository.findOne({
       select: ['id', 'email'],
       where: {
@@ -42,7 +42,7 @@ export class UsersService {
     return user;
   }
 
-  async remove(id: string) {
+  async remove(id: string): Promise<void> {
     const event = await this.getUserEvents(id, { rowId: true });
     if (event.length > 0)
       await this.eventRepository.delete(event.map((e) => e.rowId));
@@ -64,7 +64,7 @@ export class UsersService {
     });
   }
 
-  getDistinctLastUpdatedEventsWithoutCreated(events: Event[]) {
+  getDistinctLastUpdatedEventsWithoutCreated(events: Event[]): Event[] {
     const eventsFiltered: { [id: string]: Event } = {
       [events[0].id]: events[0],
     };

@@ -14,7 +14,7 @@ export class EventsService {
     private readonly userRepository: Repository<User>,
   ) {}
 
-  async create(createEventDto: CreateEventDto) {
+  async create(createEventDto: CreateEventDto): Promise<void> {
     const user = await this.userRepository.findOneBy({
       id: createEventDto.user.id,
     });
