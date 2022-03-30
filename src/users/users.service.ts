@@ -25,7 +25,7 @@ export class UsersService {
     return this.userRepository.find();
   }
 
-  async findOne(id: string): Promise<Event> {
+  async findOne(id: string): Promise<User> {
     const user = await this.userRepository.findOne({
       select: ['id', 'email'],
       where: {
@@ -50,11 +50,11 @@ export class UsersService {
     await this.userRepository.delete(id);
   }
 
-  async getUserEvents(
+  getUserEvents(
     id: string,
     select: FindOptionsSelect<Event>,
   ): Promise<Event[]> {
-    return await this.eventRepository.find({
+    return this.eventRepository.find({
       select,
       where: {
         user: {
